@@ -35,41 +35,45 @@ class UrlController extends Controller
     public function destroy($id)
     {
         $url = Url::where('id', $id)->where('user_id', Auth::id())->first();
-
         if (!$url) {
-            return redirect()->route('dashboard')->with('error', 'Link não encontrado.');
-        }
+            return redirect()->route('dashboard')->with('error', 'Link não encontrado.');        }
 
         $url->delete();
-        return redirect()->route('dashboard')->with('success', 'Link excluído com sucesso.');
-    }
+        return redirect()->route('dashboard')->with('success', 'Link excluído com sucesso.');    }
 
     // Método para redirecionar a URL curta para a URL longa
     public function redirect($shortUrl)
     {
-        // Tente encontrar a URL no cache ou no banco de dados
-        $url = Cache::remember("url:$shortUrl", 3600, function () use ($shortUrl) {
-            return Url::where('short_url', $shortUrl)->first();
-        });
+        // Tente encontrar a URL no cache
+        $url = Cache::get("url:$shortUrl");
+
+        // Se não estiver no cache, busque no banco de dados
+        if (!$url) {
+            $url = Url::where('short_url', $shortUrl)->first();
+            if ($url) {
+                // Armazene a URL no cache por 1 hora
+                Cache::put("url:$shortUrl", $url, 3600);
+            }
+        }
 
         // Verificar se a URL foi encontrada
         if (!$url) {
             return response()->json(['error' => 'URL não encontrada'], 404);
-        }
+    }
 
-        // Verificar se a URL expirou
-        if ($url->expires_at && Carbon::parse($url->expires_at)->isPast()) {
-            return response()->json(['error' => 'URL expirou'], 410); // HTTP 410 Gone
-        }
+    // Verificar se a URL expirou
+    if ($url->expires_at && Carbon::parse($url->expires_at)->isPast()) {
+        return response()->json(['error' => 'URL expirou'], 410); // HTTP 410 Gone
+    }
 
-        // Log do acesso
-        AccessLog::create([
-            'url_id' => $url->id,
-            'ip_address' => request()->ip(),
-        ]);
+    // Log do acesso
+    AccessLog::create([
+        'url_id' => $url->id,
+        'ip_address' => request()->ip(),
+    ]);
 
-        // Redirecionar para a URL longa
-        return redirect()->to($url->long_url);
+    // Redirecionar para a URL longa
+    return redirect()->to($url->long_url);
     }
 
     // Método para exibir o dashboard de monitoramento
