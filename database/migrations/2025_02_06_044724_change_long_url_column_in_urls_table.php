@@ -12,17 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('urls', function (Blueprint $table) {
-            $table->text('long_url')->change(); // Altera o tipo da coluna para TEXT
+            $table->longText('long_url')->change(); // Altera o tipo da coluna para TEXT
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('urls', function (Blueprint $table) {
-            $table->string('long_url', 255)->change(); // Reverte para VARCHAR(255) se necessário
-        });
-    }
 };

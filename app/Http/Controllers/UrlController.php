@@ -21,14 +21,14 @@ class UrlController extends Controller
 
         $shortUrl = Str::random(6);  // Geração simples de URL curta
 
-        $url = Url::create([
+        Url::create([
             'long_url' => $request->long_url,
             'short_url' => $shortUrl,
             'expires_at' => now()->addDays(30),  // Expiração após 30 dias
             'user_id' => Auth::id(), // Salva o ID do usuário autenticado
         ]);
 
-        return response()->json(['short_url' => url($shortUrl)], 201);
+        return redirect()->route('dashboard')->with('success', 'URL encurtada com sucesso!: ' . url($shortUrl));
     }
 
     // Função para apagar links

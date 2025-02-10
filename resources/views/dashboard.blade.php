@@ -12,7 +12,7 @@
                     <h2 class="text-2xl font-bold mb-4">Encurtador de Links</h2>
 
                     {{-- Formulário para encurtar links --}}
-                    <form action="{{ route('urls.create') }}" method="POST" class="mb-6">
+                    <form id="urlForm" action="{{ route('urls.create') }}" method="POST" class="mb-6">
                         @csrf
                         <div class="flex">
                             <input type="url" name="long_url" placeholder="Cole sua URL aqui..." required

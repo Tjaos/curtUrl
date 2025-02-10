@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  # Serviço PHP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    image: laravel-app:latest
+    ports:
+      - "8000:9000"
+    volumes:
+      - .:/var/www
+    networks:
+      - app-network
+
+  # Serviço MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: laravel-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: encurtador_url
+    ports:
+      - "3307:3306"
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # Serviço Redis
+  redis:
+    image: redis:alpine
+    container_name: laravel-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+# Definir redes e volumes
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
