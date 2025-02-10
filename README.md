@@ -106,5 +106,3 @@ docker-compose down
 Este projeto está sob a licença MIT. Sinta-se à vontade para modificá-lo e utilizá-lo conforme necessário.
 
 ---
-Desenvolvido por [Seu Nome](https://github.com/seu-usuario) 🚀
-
