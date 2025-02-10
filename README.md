@@ -22,8 +22,8 @@ Antes de iniciar, certifique-se de ter instalado em sua máquina:
 ### 2️⃣ Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/Tjaos/curtUrl.git
+cd curtUrl
 ```
 
 ### 3️⃣ Configurar o Arquivo `.env`
